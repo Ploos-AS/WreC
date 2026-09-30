@@ -38,7 +38,7 @@ int wrec_runtime_bind_events(event_registry *registry) {
 }
 
 static irc_output_sink wrec_sink;
-void wrec_runtime_set_output_sink(const irc_output_sink *sink){if(sink) wrec_sink=*sink; else memset(&wrec_sink,0,sizeof(wrec_sink));}
+void wrec_runtime_set_output_sink(const irc_output_sink *sink){if(sink) wrec_sink=*sink; else memset(&wrec_sink,0,sizeof(wrec_sink)); wren_backend_set_output_sink(sink);}
 int wrec_runtime_say(const char *target,const char *text){return irc_send_privmsg(&wrec_sink,target,text);}
 int wrec_runtime_notice(const char *target,const char *text){return irc_send_notice(&wrec_sink,target,text);}
 int wrec_runtime_join(const char *channel){return irc_send_join(&wrec_sink,channel);}
