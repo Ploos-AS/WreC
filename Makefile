@@ -8,6 +8,7 @@ TEST_RUNTIME := build/test_runtime
 TEST_RUNTIME_DISPATCH := build/test_runtime_dispatch
 TEST_TIMERS := build/test_timers
 TEST_TIMER_HANDLERS := build/test_timer_handlers
+TEST_WREN_TIMER := build/test_wren_timer
 SRC := src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/timers.c src/timer_handlers.c src/wren_backend.c
 WREN_DIR ?= vendor/wren
 WREN_VM_SRCS := $(WREN_DIR)/src/vm/wren_compiler.c $(WREN_DIR)/src/vm/wren_core.c $(WREN_DIR)/src/vm/wren_debug.c $(WREN_DIR)/src/vm/wren_primitive.c $(WREN_DIR)/src/vm/wren_utils.c $(WREN_DIR)/src/vm/wren_value.c $(WREN_DIR)/src/vm/wren_vm.c
@@ -47,11 +48,16 @@ test: $(BIN) $(TEST_IRC) $(TEST_DISPATCHER) $(TEST_EVENTS) $(TEST_RUNTIME) $(TES
 	@./$(TEST_TIMERS)
 	@./$(TEST_TIMER_HANDLERS)
 	@echo "WreC M1 tests: PASS"
+$(TEST_WREN_TIMER): tests/test_wren_timer.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c src/timers.c src/timer_handlers.c $(WREN_VM_SRCS)
+	@mkdir -p build
+	$(CC) $(CFLAGS) -DWREC_WITH_WREN -I$(WREN_DIR)/src/include -I$(WREN_DIR)/src/vm tests/test_wren_timer.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c src/timers.c src/timer_handlers.c $(WREN_VM_SRCS) -lm -o $(TEST_WREN_TIMER)
+
 test-wren:
 	@test -f $(WREN_DIR)/src/include/wren.h || (echo "Wren source missing at $(WREN_DIR)"; exit 1)
 	@mkdir -p build
 	$(CC) $(CFLAGS) -DWREC_WITH_WREN -I$(WREN_DIR)/src/include -I$(WREN_DIR)/src/vm tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c $(WREN_VM_SRCS) -lm -o build/test_runtime_dispatch_wren
 	@./build/test_runtime_dispatch_wren
+	@./build/test_wren_timer
 	@echo "WreC Wren IRC VM test: PASS"
 clean:
 	rm -rf build
