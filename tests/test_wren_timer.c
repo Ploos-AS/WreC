@@ -16,7 +16,7 @@ int main(void){
  if(wren_backend_eval("Timer.every(20, \"tick\")")!=0)return 6;
  if(wren_backend_eval("Events.on(\"join\", \"registeredJoin\")")!=0)return 7;
  if(wren_backend_eval("Commands.on(\"!hello2\", \"registeredCommand\")")!=0)return 8;
- irc_event ev={0}; char event_reply[128]={0}; ev.type=IRC_EVENT_JOIN; snprintf(ev.nick,sizeof(ev.nick),"alice"); snprintf(ev.target,sizeof(ev.target),"#test"); if(!wren_backend_event("join",&ev,event_reply,sizeof(event_reply)))return 14; if(strcmp(event_reply,"Registered JOIN")!=0)return 13;
+ irc_event ev={0}; char event_reply[128]={0}; ev.type=IRC_EVENT_JOIN; snprintf(ev.nick,sizeof(ev.nick),"alice"); snprintf(ev.target,sizeof(ev.target),"#test"); snprintf(ev.text,sizeof(ev.text),"!ctx Per Ola"); if(!wren_backend_event("join",&ev,event_reply,sizeof(event_reply)))return 14; if(strcmp(event_reply,"Registered JOIN")!=0)return 13;
  if(wrec_runtime_timer_poll(19)!=0)return 8;
  if(wrec_runtime_timer_poll(20)!=1)return 9;
  if(wrec_runtime_timer_poll(40)!=1)return 10;
