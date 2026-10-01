@@ -14,7 +14,8 @@ int main(void){
  if(strstr(line,"PRIVMSG #test :tick")==NULL)return 5;
  line[0]='\0';
  if(wren_backend_eval("Timer.every(20, \"tick\")")!=0)return 6;
- if(wren_backend_eval("Events.on(\"join\", \"registeredJoin\"); class Bot { static registeredJoin() { return \"Registered JOIN\" } }")!=0)return 7;
+ if(wren_backend_eval("Events.on(\"join\", \"registeredJoin\")")!=0)return 7;
+ irc_event ev={0}; char event_reply[128]={0}; ev.type=IRC_EVENT_JOIN; snprintf(ev.nick,sizeof(ev.nick),"alice"); snprintf(ev.target,sizeof(ev.target),"#test"); if(!wren_backend_event("join",&ev,event_reply,sizeof(event_reply)))return 14; if(strcmp(event_reply,"Registered JOIN")!=0)return 13;
  if(wrec_runtime_timer_poll(19)!=0)return 8;
  if(wrec_runtime_timer_poll(20)!=1)return 9;
  if(wrec_runtime_timer_poll(40)!=1)return 10;
