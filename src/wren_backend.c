@@ -60,5 +60,5 @@ void wren_backend_set_output_sink(const irc_output_sink *sink){(void)sink;}
 int wren_backend_init(void){return -1;} void wren_backend_shutdown(void){}
 int wren_backend_command(const char *m,const irc_event *e,char *r,size_t n){(void)m;(void)e;(void)r;(void)n;return 0;}
 int wren_backend_event(const char *m,const irc_event *e,char *r,size_t n){(void)m;(void)e;(void)r;(void)n;return 0;}
-int wren_backend_grant_capability(const char *cap){return bot_rt&&cap&&bot_runtime_grant(bot_rt,cap);}
-
+int wren_backend_grant_capability(const char *cap){(void)cap;return 0;}
+#endif
