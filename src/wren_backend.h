@@ -10,3 +10,5 @@ int wren_backend_command(const char *method,const irc_event *event,char *reply,s
 int wren_backend_event(const char *name,const irc_event *event,char *reply,size_t reply_size);
 int wren_backend_eval(const char *source);
 #endif
+
+int wren_backend_grant_capability(const char *cap);
