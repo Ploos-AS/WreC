@@ -5,6 +5,23 @@ on:
   pull_request:
 
 jobs:
+  standalone-contract:
+    runs-on: ubuntu-latest
+    env:
+      WREC_PBMP_SOCKET: ""
+      WREC_BOTWEB_URL: ""
+      WREC_BOTAI_URL: ""
+      WREC_BOTLOGIC_URL: ""
+    steps:
+      - uses: actions/checkout@v4
+      - name: Qualify standalone core with all integrations disabled
+        run: |
+          test -z "$WREC_PBMP_SOCKET"
+          test -z "$WREC_BOTWEB_URL"
+          test -z "$WREC_BOTAI_URL"
+          test -z "$WREC_BOTLOGIC_URL"
+          make test
+
   core:
     runs-on: ubuntu-latest
     steps:
