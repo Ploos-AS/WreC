@@ -14,12 +14,13 @@ int main(void){
  if(strstr(line,"PRIVMSG #test :tick")==NULL)return 5;
  line[0]='\0';
  if(wren_backend_eval("Timer.every(20, \"tick\")")!=0)return 6;
- if(wrec_runtime_timer_poll(19)!=0)return 7;
- if(wrec_runtime_timer_poll(20)!=1)return 8;
- if(wrec_runtime_timer_poll(40)!=1)return 9;
- if(!wrec_runtime_timer_cancel(2))return 10;
+ if(wren_backend_eval("Events.on(\"join\", \"registeredJoin\"); class Bot { static registeredJoin() { return \"Registered JOIN\" } }")!=0)return 7;
+ if(wrec_runtime_timer_poll(19)!=0)return 8;
+ if(wrec_runtime_timer_poll(20)!=1)return 9;
+ if(wrec_runtime_timer_poll(40)!=1)return 10;
+ if(!wrec_runtime_timer_cancel(2))return 11;
  line[0]='\0';
- if(wrec_runtime_timer_poll(60)!=0)return 11;
+ if(wrec_runtime_timer_poll(60)!=0)return 12;
  wrec_runtime_shutdown();
  puts("WreC Wren timer lifecycle: PASS"); return 0;
 }
