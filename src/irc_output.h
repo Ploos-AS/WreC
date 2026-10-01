@@ -1,6 +1,7 @@
 #ifndef WREC_IRC_OUTPUT_H
 #define WREC_IRC_OUTPUT_H
-#include <stddef.h>\n#include "irc_core.h"
+#include <stddef.h>
+#include "irc_core.h"
 int irc_format_privmsg(const char *target,const char *text,char *out,size_t out_size);
 int irc_format_notice(const char *target,const char *text,char *out,size_t out_size);
 int irc_format_join(const char *channel,char *out,size_t out_size);
