@@ -11,6 +11,6 @@ int main(void){
  if (strcmp(reply,"Hello from WreC")!=0) return 4;
  if(wren_backend_eval("class Bot { static argcmd() { return IRCContext.command() + \":\" + IRCContext.args() } }")!=0)return 5;
  if(wren_backend_eval("Commands.on(\"!args\", \"argcmd\")")!=0)return 6;
- memset(reply,0,sizeof(reply)); if(irc_parse_line(":alice!u@h PRIVMSG #ploos :!args Per Ola\\r\\n",&e)!=1)return 7; if(!wrec_backend_command("args",&e,reply,sizeof(reply)))return 8; if(strcmp(reply,"args:Per Ola")!=0)return 9;
+ memset(reply,0,sizeof(reply)); if(irc_parse_line(":alice!u@h PRIVMSG #ploos :!args Per Ola\\r\\n",&e)!=1)return 7; if(!wren_backend_command("args",&e,reply,sizeof(reply)))return 8; if(strcmp(reply,"args:Per Ola")!=0)return 9;
  wrec_runtime_shutdown(); puts("runtime IRC command: PASS"); return 0;
 }
