@@ -6,7 +6,9 @@ TEST_DISPATCHER := build/test_dispatcher
 TEST_EVENTS := build/test_events
 TEST_RUNTIME := build/test_runtime
 TEST_RUNTIME_DISPATCH := build/test_runtime_dispatch
-SRC := src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c
+TEST_TIMERS := build/test_timers
+TEST_TIMER_HANDLERS := build/test_timer_handlers
+SRC := src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/timers.c src/timer_handlers.c src/wren_backend.c
 WREN_DIR ?= vendor/wren
 WREN_VM_SRCS := $(WREN_DIR)/src/vm/wren_compiler.c $(WREN_DIR)/src/vm/wren_core.c $(WREN_DIR)/src/vm/wren_debug.c $(WREN_DIR)/src/vm/wren_primitive.c $(WREN_DIR)/src/vm/wren_utils.c $(WREN_DIR)/src/vm/wren_value.c $(WREN_DIR)/src/vm/wren_vm.c
 .PHONY: all test test-wren clean
@@ -26,9 +28,15 @@ $(TEST_EVENTS): tests/test_events.c src/irc_core.c src/events.c src/irc_core.h s
 $(TEST_RUNTIME): tests/test_runtime.c src/runtime_adapter.c src/wren_backend.c src/runtime_adapter.h src/wren_backend.h src/irc_core.h
 	@mkdir -p build
 	$(CC) $(CFLAGS) tests/test_runtime.c src/runtime_adapter.c src/wren_backend.c -o $(TEST_RUNTIME)
-$(TEST_RUNTIME_DISPATCH): tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c
+$(TEST_RUNTIME_DISPATCH) $(TEST_TIMERS) $(TEST_TIMER_HANDLERS): tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c
 	@mkdir -p build
 	$(CC) $(CFLAGS) tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c -o $(TEST_RUNTIME_DISPATCH)
+$(TEST_TIMERS): tests/test_timers.c src/timers.c src/timers.h
+	@mkdir -p build
+	$(CC) $(CFLAGS) tests/test_timers.c src/timers.c -o $(TEST_TIMERS)
+$(TEST_TIMER_HANDLERS): tests/test_timer_handlers.c src/timer_handlers.c src/timer_handlers.h
+	@mkdir -p build
+	$(CC) $(CFLAGS) tests/test_timer_handlers.c src/timer_handlers.c -o $(TEST_TIMER_HANDLERS)
 test: $(BIN) $(TEST_IRC) $(TEST_DISPATCHER) $(TEST_EVENTS) $(TEST_RUNTIME) $(TEST_RUNTIME_DISPATCH)
 	@./$(BIN) | grep -q "WreC M0"
 	@./$(TEST_IRC)
@@ -36,6 +44,8 @@ test: $(BIN) $(TEST_IRC) $(TEST_DISPATCHER) $(TEST_EVENTS) $(TEST_RUNTIME) $(TES
 	@./$(TEST_EVENTS)
 	@./$(TEST_RUNTIME)
 	@./$(TEST_RUNTIME_DISPATCH)
+	@./$(TEST_TIMERS)
+	@./$(TEST_TIMER_HANDLERS)
 	@echo "WreC M1 tests: PASS"
 test-wren:
 	@test -f $(WREN_DIR)/src/include/wren.h || (echo "Wren source missing at $(WREN_DIR)"; exit 1)
