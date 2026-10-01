@@ -20,6 +20,7 @@ The standalone runtime now has a qualified language-neutral contract for IRC com
 - PBMP integration boundary defined from the start
 - Hooks for BotWeb and BotAI
 - Standalone-first operation
+- Standalone qualification with PBMP, BotWeb, BotAI and BotLogic disabled
 - Deterministic tests for parser, dispatch and Wren bindings
 
 ## Initial architecture
@@ -60,8 +61,11 @@ The first Wren API should expose a compact IRC-facing module with operations for
 2. Wren is a first-class extension language, not a configuration gimmick.
 3. Script failures are isolated from the IRC core.
 4. PBMP integration is optional at runtime, but first-class in the architecture.
-5. BotWeb and BotAI remain optional components.
+5. BotWeb, BotAI and BotLogic remain optional components.
 6. No malware or offensive payloads are stored in the repository.
+
+
+Standalone qualification requires the bot to build and pass its core test suite with PBMP, BotWeb, BotAI and BotLogic disabled. None of these integrations may become a required build/runtime dependency.
 
 ## License
 
