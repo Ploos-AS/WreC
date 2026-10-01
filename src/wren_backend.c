@@ -54,11 +54,11 @@ int wren_backend_init(void){memset(timer_contexts,0,sizeof(timer_contexts));mems
 void wren_backend_shutdown(void){if(bot_rt)bot_runtime_destroy(bot_rt);bot_rt=NULL;if(vm&&hello_call)wrenReleaseHandle(vm,hello_call);if(vm&&event_call)wrenReleaseHandle(vm,event_call);if(vm)wrenFreeVM(vm);hello_call=NULL;event_call=NULL;vm=NULL;}
 int wren_backend_command(const char *method,const irc_event *event,char *reply,size_t rs){const char *result;size_t i;if(!vm||!method||!event||!reply||!rs)return 0;active_event=*event;active_event_valid=1;for(i=0;i<WREC_COMMAND_MAX;i++)if(command_bindings[i].active&&strcmp(command_bindings[i].name,method)==0){WrenHandle *call;wrenEnsureSlots(vm,1);wrenGetVariable(vm,"bot","Bot",0);call=wrenMakeCallHandle(vm,command_bindings[i].handler);if(!call)return 0;if(wrenCall(vm,call)!=WREN_RESULT_SUCCESS){wrenReleaseHandle(vm,call);return 0;}wrenReleaseHandle(vm,call);if(wrenGetSlotType(vm,0)==WREN_TYPE_STRING){result=wrenGetSlotString(vm,0);snprintf(reply,rs,"%s",result);active_event_valid=0;return 1;}active_event_valid=0;return 0;}return 0;}
 int wren_backend_event(const char *name,const irc_event *event,char *reply,size_t rs){const char *result;size_t i;if(!vm||!event||!name||!reply||!rs)return 0;for(i=0;i<8;i++)if(event_bindings[i].active&&strcmp(event_bindings[i].name,name)==0){WrenHandle *call;wrenEnsureSlots(vm,1);wrenGetVariable(vm,"bot","Bot",0);call=wrenMakeCallHandle(vm,event_bindings[i].handler);if(!call)return 0;if(wrenCall(vm,call)!=WREN_RESULT_SUCCESS){wrenReleaseHandle(vm,call);return 0;}wrenReleaseHandle(vm,call);if(wrenGetSlotType(vm,0)==WREN_TYPE_STRING){result=wrenGetSlotString(vm,0);snprintf(reply,rs,"%s",result);return 1;}return 0;}if(!event_call)return 0;wrenEnsureSlots(vm,4);wrenGetVariable(vm,"bot","Bot",0);wrenSetSlotString(vm,1,name);wrenSetSlotString(vm,2,event->nick);wrenSetSlotString(vm,3,event->target);if(wrenCall(vm,event_call)!=WREN_RESULT_SUCCESS)return 0;if(wrenGetSlotType(vm,0)!=WREN_TYPE_STRING)return 0;result=wrenGetSlotString(vm,0);snprintf(reply,rs,"%s",result);return 1;}
+int wren_backend_grant_capability(const char *cap){return bot_rt&&cap&&bot_runtime_grant(bot_rt,cap);}
 #else
 void wren_backend_set_output_sink(const irc_output_sink *sink){(void)sink;}
 int wren_backend_init(void){return -1;} void wren_backend_shutdown(void){}
 int wren_backend_command(const char *m,const irc_event *e,char *r,size_t n){(void)m;(void)e;(void)r;(void)n;return 0;}
 int wren_backend_event(const char *m,const irc_event *e,char *r,size_t n){(void)m;(void)e;(void)r;(void)n;return 0;}
-#endif
-
 int wren_backend_grant_capability(const char *cap){return bot_rt&&cap&&bot_runtime_grant(bot_rt,cap);}
+
