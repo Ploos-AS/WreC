@@ -14,13 +14,19 @@ jobs:
       WREC_BOTLOGIC_URL: ""
     steps:
       - uses: actions/checkout@v4
-      - name: Qualify standalone core with all integrations disabled
+      - name: Fetch required pinned Wren runtime
+        run: |
+          mkdir -p vendor
+          git clone https://github.com/wren-lang/wren.git vendor/wren
+          git -C vendor/wren checkout 4a18fc489f9ea3d253b20dd40f4cdad0d6bb40eb
+          test "$(git -C vendor/wren rev-parse HEAD)" = "4a18fc489f9ea3d253b20dd40f4cdad0d6bb40eb"
+      - name: Qualify standalone bot with optional integrations disabled
         run: |
           test -z "$WREC_PBMP_SOCKET"
           test -z "$WREC_BOTWEB_URL"
           test -z "$WREC_BOTAI_URL"
           test -z "$WREC_BOTLOGIC_URL"
-          make test
+          make test-wren
 
   core:
     runs-on: ubuntu-latest
