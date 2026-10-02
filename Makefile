@@ -73,12 +73,12 @@ test: $(BIN) $(TEST_BOT_RUNTIME_PERSISTENCE) $(TEST_BOT_STATE_BACKEND) $(TEST_BO
 	@echo "WreC M1 tests: PASS"
 $(TEST_WREN_TIMER): tests/test_wren_timer.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c src/timers.c src/timer_handlers.c $(WREN_VM_SRCS)
 	@mkdir -p build
-	$(CC) $(CFLAGS) -DWREC_WITH_WREN -I$(WREN_DIR)/src/include -I$(WREN_DIR)/src/vm tests/test_wren_timer.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c src/timers.c src/timer_handlers.c $(WREN_VM_SRCS) -lm -o $(TEST_WREN_TIMER)
+	$(CC) $(CFLAGS) -DWREC_WITH_WREN -I$(WREN_DIR)/src/include -I$(WREN_DIR)/src/vm -I$(WREN_DIR)/src/optional tests/test_wren_timer.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c src/timers.c src/timer_handlers.c $(WREN_VM_SRCS) -lm -o $(TEST_WREN_TIMER)
 
 test-wren:
 	@test -f $(WREN_DIR)/src/include/wren.h || (echo "Wren source missing at $(WREN_DIR)"; exit 1)
 	@mkdir -p build
-	$(CC) $(CFLAGS) -DWREC_WITH_WREN -I$(WREN_DIR)/src/include -I$(WREN_DIR)/src/vm tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c $(WREN_VM_SRCS) -lm -o build/test_runtime_dispatch_wren
+	$(CC) $(CFLAGS) -DWREC_WITH_WREN -I$(WREN_DIR)/src/include -I$(WREN_DIR)/src/vm -I$(WREN_DIR)/src/optional tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c $(WREN_VM_SRCS) -lm -o build/test_runtime_dispatch_wren
 	@./build/test_runtime_dispatch_wren
 	@./build/test_wren_timer
 	@echo "WreC Wren IRC VM test: PASS"
