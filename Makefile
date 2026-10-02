@@ -18,7 +18,7 @@ TEST_TIMER_HANDLERS := build/test_timer_handlers
 TEST_WREN_TIMER := build/test_wren_timer
 SRC := src/bot_state.c src/bot_caps.c src/bot_runtime.c src/bot_state_file.c src/bot_state_file_codec.c src/bot_state_file_save.c src/irc_output.c src/irc_output_sink.c src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/timers.c src/timer_handlers.c src/wren_backend.c
 WREN_DIR ?= vendor/wren
-WREN_VM_SRCS := $(WREN_DIR)/src/vm/wren_compiler.c $(WREN_DIR)/src/vm/wren_core.c $(WREN_DIR)/src/vm/wren_debug.c $(WREN_DIR)/src/vm/wren_primitive.c $(WREN_DIR)/src/vm/wren_utils.c $(WREN_DIR)/src/vm/wren_value.c $(WREN_DIR)/src/vm/wren_vm.c
+WREN_VM_SRCS := $(WREN_DIR)/src/vm/wren_compiler.c $(WREN_DIR)/src/vm/wren_core.c $(WREN_DIR)/src/vm/wren_debug.c $(WREN_DIR)/src/vm/wren_primitive.c $(WREN_DIR)/src/vm/wren_utils.c $(WREN_DIR)/src/vm/wren_value.c $(WREN_DIR)/src/vm/wren_vm.c $(WREN_DIR)/src/optional/wren_opt_meta.c $(WREN_DIR)/src/optional/wren_opt_random.c
 .PHONY: all test test-wren clean
 all: $(BIN)
 $(BIN): $(SRC)
@@ -78,7 +78,7 @@ $(TEST_WREN_TIMER): tests/test_wren_timer.c src/irc_core.c src/runtime_adapter.c
 test-wren:
 	@test -f $(WREN_DIR)/src/include/wren.h || (echo "Wren source missing at $(WREN_DIR)"; exit 1)
 	@mkdir -p build
-	$(CC) $(CFLAGS) -DWREC_WITH_WREN -I$(WREN_DIR)/src/include -I$(WREN_DIR)/src/vm -I$(WREN_DIR)/src/optional tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c $(WREN_VM_SRCS) -lm -o build/test_runtime_dispatch_wren
+	$(CC) $(CFLAGS) -DWREC_WITH_WREN -I$(WREN_DIR)/src/include -I$(WREN_DIR)/src/vm -I$(WREN_DIR)/src/optional tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/wren_backend.c src/bot_runtime.c src/bot_state.c src/bot_caps.c src/bot_state_file.c src/bot_state_file_codec.c src/bot_state_file_save.c src/events.c src/timers.c src/timer_handlers.c src/irc_output.c src/irc_output_sink.c $(WREN_VM_SRCS) -lm -o build/test_runtime_dispatch_wren
 	@./build/test_runtime_dispatch_wren
 	@./build/test_wren_timer
 	@echo "WreC Wren IRC VM test: PASS"
