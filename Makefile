@@ -16,7 +16,7 @@ TEST_RUNTIME_DISPATCH := build/test_runtime_dispatch
 TEST_TIMERS := build/test_timers
 TEST_TIMER_HANDLERS := build/test_timer_handlers
 TEST_WREN_TIMER := build/test_wren_timer
-SRC := src/bot_state.c src/bot_caps.c src/bot_runtime.c src/bot_state_backend.c src/bot_state_file.c src/bot_state_file_codec.c src/bot_state_file_save.c src/irc_output.c src/irc_output_sink.c src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/timers.c src/timer_handlers.c src/wren_backend.c
+SRC := src/bot_state.c src/bot_caps.c src/bot_runtime.c src/bot_state_file.c src/bot_state_file_codec.c src/bot_state_file_save.c src/irc_output.c src/irc_output_sink.c src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/timers.c src/timer_handlers.c src/wren_backend.c
 WREN_DIR ?= vendor/wren
 WREN_VM_SRCS := $(WREN_DIR)/src/vm/wren_compiler.c $(WREN_DIR)/src/vm/wren_core.c $(WREN_DIR)/src/vm/wren_debug.c $(WREN_DIR)/src/vm/wren_primitive.c $(WREN_DIR)/src/vm/wren_utils.c $(WREN_DIR)/src/vm/wren_value.c $(WREN_DIR)/src/vm/wren_vm.c
 .PHONY: all test test-wren clean
